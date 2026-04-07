@@ -8,3 +8,19 @@
 
 1. Homework 1: 奇數階魔方陣（Siamese method）
 2. 輸出 1, 3, 5, 7, 9 階魔方陣
+
+## 作業題目資料夾
+
+作業題目檔統一放在 `assignments/problems/`。
+
+目前已整理：
+
+1. `assignments/problems/hw1_problem.doc`
+
+## 作業圖片區
+
+作業執行截圖統一放在 `assets/homework-images/`。
+
+### HW1 輸出截圖
+
+![HW1 Output](assets/homework-images/hw1-output.png)
