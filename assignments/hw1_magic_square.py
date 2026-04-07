@@ -26,5 +26,5 @@ def print_magic_square(n):
         print()
     print()
 
-for n in [1,3]:
+for n in [1,3,5,7,9]:
     print_magic_square(n)
