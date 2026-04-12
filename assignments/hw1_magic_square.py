@@ -1,9 +1,9 @@
 def squareFun(n):
     arr=[[0]*n for _ in range(n)]
-
+    
     m=n//2
     x,y=0,m
-    arr[0][m]=1
+    arr[0][y]=1
 
     for i in range(2,n*n+1):
         next_x=(x-1)%n
@@ -18,11 +18,12 @@ def squareFun(n):
 
         x,y=next_x,next_y
     
-    for  row in arr:
+    for row in arr:
         for col in row:
             print(f"{col}",end=" ")
         print()
     print()
+    
 
-for i in [1,3,5,7,9]:
-    squareFun(i)
+for num in [1,3,5,7,9]:
+    squareFun(num)
