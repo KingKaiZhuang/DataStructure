@@ -1,30 +1,28 @@
-def print_magic_square(n):
-    print(f"{n} 階模方陣")
+def squareFun(n):
+    arr=[[0]*n for _ in range(n)]
 
-    grid=[[0]*n for _ in range(n)]
+    m=n//2
+    x,y=0,m
+    arr[0][m]=1
 
-    i=0
-    j=n//2
-    grid[i][j]=1
+    for i in range(2,n*n+1):
+        next_x=(x-1)%n
+        next_y=(y-1)%n
 
-    for k in range(2,n*n+1):
-        next_i=(i-1)%n
-        next_j=(j-1)%n
+        if arr[next_x][next_y]==0:
+            arr[next_x][next_y]=i
+        else:
+            next_x=(x+1)%n
+            next_y=y
+            arr[next_x][next_y]=i
 
-        if grid[next_i][next_j]!=0:
-            next_i=(i+1)%n
-            next_j=j
-
-        i=next_i
-        j=next_j
-        grid[i][j]=k
-
-
-    for r in grid:
-        for num in r:
-            print(f"{num:3d}", end=" ")
+        x,y=next_x,next_y
+    
+    for  row in arr:
+        for col in row:
+            print(f"{col}",end=" ")
         print()
     print()
 
-for n in [1,3,5,7,9]:
-    print_magic_square(n)
+for i in [1,3,5,7,9]:
+    squareFun(i)
