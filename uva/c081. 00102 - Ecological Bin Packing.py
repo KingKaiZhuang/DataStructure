@@ -3,26 +3,28 @@ from itertools import permutations
 while True:
     try:
         arr=['B','C','G']
-        # 輸入桶子內有多少瓶子，三個一組，B G C
-        container=list(map(int,input().split()))
-        record={
-            "B": [container[0],container[3],container[6]],
-            "G": [container[1],container[4],container[7]],
-            "C": [container[2],container[5],container[8]]
+        # 輸入
+        nList=list(map(int,input().split()))
+        # 定義桶子
+        container={
+            "B": [nList[0],nList[3],nList[6]],
+            "G": [nList[1],nList[4],nList[7]],
+            "C": [nList[2],nList[5],nList[8]]
         }
-        # 總數
-        total=sum(container)
-
+        # 總數量
+        total=sum(nList)
         minN=9999
-        # 計算每個排列的移動次數，總共-不動
+        # 總數量 - 固定數量 = 變動量 (取最小)
         for p in permutations(arr):
-            s="".join(p)
-            stay=record[p[0]][0]+record[p[1]][1]+record[p[2]][2]
+            ans="".join(p)
+            stay=container[p[0]][0]+container[p[1]][1]+container[p[2]][2]
             gap=total-stay
-
-            if minN>gap:
-                ans=s
+            
+            if gap<minN:
+                name=ans
                 minN=gap
-        print(f"{ans} {minN}")
+            
+        print(f"{name} {minN}")
+
     except EOFError:
         break
