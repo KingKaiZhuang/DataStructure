@@ -1,38 +1,35 @@
-# input data
-data=[]
+house=[0]*10005
+minN=9999
+maxN=0
+# input
 while True:
     try:
         line=input()
-        data.extend(map(int,line.split()))
+        if not line:
+            break
+        data=list(map(int,line.split()))
+        left,H,right=data[0],data[1],data[2]
+
+        if left<minN:
+            minN=left
+        if right>maxN:
+            maxN=right
+
+        # height def
+        for i in range(left,right):
+            if house[i]<H:
+                house[i]=H
     except EOFError:
         break
-# define every height
-house=[0]*10005
-minN=10005
-maxN=0
-i=0
-while i<len(data):
-    L=data[i]
-    H=data[i+1]
-    R=data[i+2]
-    i+=3
 
-    if L<minN:
-        minN=L
-    if R>maxN:
-        maxN=R
-
-    for x in range(L,R):
-        if H>house[x]:
-            house[x]=H
 # output
 curH=0
 record=[]
-for i in range(minN,maxN+1):
-    if house[i]!=curH:
-        record.append(str(i))
-        record.append(str(house[i]))
-        curH=house[i]
+for j in range(minN,maxN+1):
+    if house[j]!=curH:
+        record.append(str(j))
+        record.append(str(house[j]))
+        curH=house[j]
 
 ans=" ".join(record)
 print(ans)
