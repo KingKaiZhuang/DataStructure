@@ -1,18 +1,18 @@
+# input
 while True:
     try:
-        # input
         n=int(input())
-        # define 
+        # define
         maxN=int((10**n)**0.5)
-        devision=int((10**(n//2)))
-        # cal
+        devision=(10**(n//2))
+        # cal -> print result
         left,right=0,0
         for i in range(maxN):
-            num=i*i
-            left=num//devision
-            right=num%devision
-            if (left+right)==i:
-                ans=str(num).zfill(n)
+            squareNum=i*i
+            left=squareNum//devision
+            right=squareNum%devision
+            if left+right==i:
+                ans=str(squareNum).zfill(n)
                 print(ans)
     except EOFError:
         break
