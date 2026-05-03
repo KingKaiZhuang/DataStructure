@@ -2,24 +2,21 @@ while True:
     try:
         # input
         n=int(input())
-        # in which line?
-        tmp,level=1,1
-        while tmp<n:
+        total,level=1,1
+        # line、total - current line
+        while total<n:
             level+=1
-            tmp+=level
-        
-        # cal line - n
-        duration=tmp-n
-        
-        n1,n2=0,0
+            total+=level
+        # duration
+        duration=total-n
         if level%2==1:
-            n1=1+duration
-            n2=level-duration
+            numerator=1+duration
+            denominator=level-duration
         else:
-            n1=level-duration
-            n2=1+duration
-        
-        print(f"TERM {n} IS {n1}/{n2}")
+            numerator=level-duration
+            denominator=1+duration
+        # result x/x
+        print(f"TERM {n} IS {numerator}/{denominator}")    
 
     except EOFError:
         break
