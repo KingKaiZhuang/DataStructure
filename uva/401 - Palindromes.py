@@ -7,33 +7,31 @@ mirrorMap = {
 
 while True:
     try:
-        s=input().strip()
-        if not s:
-            continue
-
+        line=input().strip()
+        length=len(line)
+        # palindrome,mirrored,both
         isPal=True
         isMir=True
-        length=len(s)
-
         for i in range((length+1)//2):
-            leftChar=s[i]
-            rightChar=s[length-1-i]
+            left=line[i]
+            right=line[length-1-i]
 
-            if leftChar!=rightChar:
+            # palindrome
+            if left!=right:
                 isPal=False
-
-            if leftChar not in mirrorMap or mirrorMap[leftChar]!=rightChar:
+            # mirrored
+            if left not in mirrorMap or mirrorMap[left]!=right:
                 isMir=False
-
+        
+        # ans
         if isPal and isMir:
-            print(f"{s} -- is a mirrored palindrome.")
+            print(f"{line} -- is a mirrored palindrome.")
         elif isPal and not isMir:
-            print(f"{s} -- is a regular palindrome.")
+            print(f"{line} -- is a regular palindrome.")
         elif not isPal and isMir:
-            print(f"{s} -- is a mirrored string.")
+            print(f"{line} -- is a mirrored string.")
         else:
-            print(f"{s} -- is not a palindrome.")
+            print(f"{line} -- is not a palindrome.")
         print()
-
     except EOFError:
         break
