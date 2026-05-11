@@ -1,22 +1,18 @@
 while True:
     try:
-        # input
         n=int(input())
-        total,level=1,1
-        # line、total - current line
-        while total<n:
+        step,level=0,0
+        while step<n:
             level+=1
-            total+=level
-        # duration
-        duration=total-n
-        if level%2==1:
-            numerator=1+duration
-            denominator=level-duration
-        else:
+            step+=level
+        duration=step-n
+        
+        if level%2==0:
             numerator=level-duration
-            denominator=1+duration
-        # result x/x
-        print(f"TERM {n} IS {numerator}/{denominator}")    
-
+            denominator=duration+1
+        else:
+            numerator=duration+1
+            denominator=level-duration 
+        print(f"TERM {n} IS {numerator}/{denominator}")
     except EOFError:
         break

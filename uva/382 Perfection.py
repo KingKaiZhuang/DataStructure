@@ -1,33 +1,28 @@
-# def fun
-def perfection(n):
-    total=1
-    if n==1:
-        return 0
-    for j in range(2,int(n**0.5)+1):
-        if n%j==0:
-            total+=j
-            if j!=n//j:
-                total+=n//j        
-    return total
-
-
 print("PERFECTION OUTPUT")
-# input -> for -> func
+
 while True:
     try:
         line=input().split()
         for i in line:
-            if i=='0':
+            n=int(i)
+            if n==0:
                 print("END OF OUTPUT")
                 break
-            num=int(i)
-            ans=perfection(num)
+            total=1
+            if n==1:
+                total=0
+            for j in range(2,int(n**0.5)+1):
+                if n%j==0:
+                    total+=j
+                    if j!=n//j:
+                        total+=n//j
 
-            if ans==num:
-                print(f"{num:>5}  PERFECT")
-            elif ans<num:
-                print(f"{num:>5}  DEFICIENT")
+            if n == total:
+                print(f"{n:>5}  PERFECT")
+            elif total > n:
+                print(f"{n:>5}  ABUNDANT")
             else:
-                print(f"{num:>5}  ABUNDANT")
+                print(f"{n:>5}  DEFICIENT")
+            
     except EOFError:
         break
