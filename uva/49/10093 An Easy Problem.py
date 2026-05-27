@@ -1,31 +1,31 @@
 while True:
     try:
         line=input()
-        # for loop -> total
         total=0
-        maxN=0
-        for i in line:
+        maxN=1
+
+        for c in line:
             d=-1
-            if '0'<=i<='9':
-                d=ord(i)-ord('0')
-            elif 'A'<=i<='Z':
-                d=ord(i)-ord('A')+10
-            elif 'a'<=i<='z':
-                d=ord(i)-ord('a')+36
-            
+            if '0'<=c<='9':
+                d=ord(c)-ord('0')
+            elif 'A'<=c<='Z':
+                d=ord(c)-ord('A')+10
+            elif 'a'<=c<='z':
+                d=ord(c)-ord('a')+36
+
             if d!=-1:
                 total+=d
-                if maxN<d:
+                if d>maxN:
                     maxN=d
         
-        ok=False
-        for j in range(maxN+1,63):
-            if total%(j-1)==0:
-                print(j)
-                ok=True
+        found=False
+        for i in range(maxN+1,63):
+            if (total%(i-1))==0:
+                print(i)
+                found=True
                 break
 
-        if not ok:
+        if not found:
             print("such number is impossible!")
 
     except EOFError:
