@@ -7,10 +7,10 @@ while True:
         if set1==set2:
             print("A equals B")
         # A in B
-        elif set1 < set2:
+        elif set1 <= set2:
             print("A is a proper subset of B")
         # B in A
-        elif set2 < set1:
+        elif set2 <= set1:
             print("B is a proper subset of A")
         # disjoint
         elif set1.isdisjoint(set2):
