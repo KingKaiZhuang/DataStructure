@@ -2,25 +2,27 @@ while True:
     try:
         line=input().strip()
         rec={}
-        maxN=0
-        ans=[]
-        # record -> print maxString and number
+        # record O(N)
         for c in line:
             if c.isalpha():
                 if c not in rec:
                     rec[c]=1
                 else:
                     rec[c]+=1
-            
-                    if rec[c]>maxN:
-                        maxN=rec[c]
-                        ans=[c]
-                    elif rec[c]==maxN:
-                        ans.append(c)
+        # calculate the max
+        maxN=-1
+        ans=[]
+        # O(K)，也就是 O(1)
+        for k,v in rec.items():
+            if v>maxN:
+                maxN=v
+                ans=[k]
+            elif v==maxN:
+                ans.append(k)
+        # O(K log K)
         ans.sort()
-        for i in ans:
-            print(f"{i}",end="")
-        print(f" {maxN}")
         
+        print(f"{''.join(ans)} {maxN}")
+
     except EOFError:
         break
