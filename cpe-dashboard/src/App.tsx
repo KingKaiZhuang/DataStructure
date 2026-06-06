@@ -30,20 +30,25 @@ export default function App() {
   // Selection states for batch operations
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
-  // LocalStorage state for progress tracking
-  const [solveStates, setSolveStates] = useState<Record<number, SolveStatus>>(() => {
-    try {
-      const saved = localStorage.getItem('cpe-solve-states');
-      return saved ? JSON.parse(saved) : {};
-    } catch {
-      return {};
-    }
-  });
+  // Load from SQLite on mount
+  const [solveStates, setSolveStates] = useState<Record<number, SolveStatus>>({});
 
-  // Save to localStorage
   useEffect(() => {
-    localStorage.setItem('cpe-solve-states', JSON.stringify(solveStates));
-  }, [solveStates]);
+    fetch('/api/progress')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          const loadedStates: Record<number, SolveStatus> = {};
+          data.forEach(row => {
+            if (row.platform === 'cpe') {
+              loadedStates[row.id] = row.status as SolveStatus;
+            }
+          });
+          setSolveStates(loadedStates);
+        }
+      })
+      .catch(err => console.error('Failed to load progress from SQLite:', err));
+  }, []);
 
   // Toggle Theme
   useEffect(() => {
@@ -66,6 +71,13 @@ export default function App() {
       ...prev,
       [id]: status
     }));
+
+    // Save to SQLite
+    fetch('/api/progress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ platform: 'cpe', id, status })
+    }).catch(err => console.error('Failed to save progress to SQLite:', err));
   };
 
   // Stats calculation
@@ -101,8 +113,10 @@ export default function App() {
 
   // Reset progress helper
   const handleReset = () => {
-    if (window.confirm('確定要重置所有題目狀態嗎？此動作無法復原。')) {
+    if (confirm('確定要重置所有 CPE 進度嗎？')) {
       setSolveStates({});
+      fetch('/api/progress?platform=cpe', { method: 'DELETE' })
+        .catch(err => console.error('Failed to reset progress in SQLite:', err));
       setSelectedIds([]);
     }
   };
@@ -172,6 +186,12 @@ export default function App() {
       const next = { ...prev };
       selectedIds.forEach(id => {
         next[id] = status;
+        // Save to SQLite for each id
+        fetch('/api/progress', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ platform: 'cpe', id, status })
+        }).catch(err => console.error('Failed to save progress to SQLite:', err));
       });
       return next;
     });

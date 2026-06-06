@@ -15,26 +15,38 @@ type SolveStatus = 'todo' | 'in-progress' | 'solved';
 export default function NeetCodeDashboard({ theme }: { theme: 'dark' | 'light' }) {
   const problems = rawProblems as NeetCodeProblem[];
 
-  // LocalStorage state for progress tracking
-  const [solveStates, setSolveStates] = useState<Record<number, SolveStatus>>(() => {
-    try {
-      const saved = localStorage.getItem('neetcode-solve-states');
-      return saved ? JSON.parse(saved) : {};
-    } catch {
-      return {};
-    }
-  });
+  // Load from SQLite on mount
+  const [solveStates, setSolveStates] = useState<Record<number, SolveStatus>>({});
 
-  // Save to localStorage
   useEffect(() => {
-    localStorage.setItem('neetcode-solve-states', JSON.stringify(solveStates));
-  }, [solveStates]);
+    fetch('/api/progress')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          const loadedStates: Record<number, SolveStatus> = {};
+          data.forEach(row => {
+            if (row.platform === 'neetcode') {
+              loadedStates[row.id] = row.status as SolveStatus;
+            }
+          });
+          setSolveStates(loadedStates);
+        }
+      })
+      .catch(err => console.error('Failed to load progress from SQLite:', err));
+  }, []);
 
   const handleStatusChange = (id: number, status: SolveStatus) => {
     setSolveStates(prev => ({
       ...prev,
       [id]: status
     }));
+
+    // Save to SQLite
+    fetch('/api/progress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ platform: 'neetcode', id, status })
+    }).catch(err => console.error('Failed to save progress to SQLite:', err));
   };
 
   // Group by category
