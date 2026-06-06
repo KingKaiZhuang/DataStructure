@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import './App.css';
 import rawProblems from './data/problems.json';
+import NeetCodeDashboard from './NeetCodeDashboard';
 
 interface Problem {
   id: number;
@@ -18,6 +19,7 @@ export default function App() {
   const problems = rawProblems as Problem[];
 
   // States
+  const [activeTab, setActiveTab] = useState<'cpe' | 'neetcode'>('cpe');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPlatform, setSelectedPlatform] = useState<'all' | 'ZeroJudge' | 'VJudge'>('all');
   const [selectedStatus, setSelectedStatus] = useState<'all' | SolveStatus>('all');
@@ -193,9 +195,24 @@ export default function App() {
             </svg>
           </div>
           <div>
-            <h1>CPE 題目練習追蹤看板</h1>
+            <h1>程式能力檢定追蹤看板</h1>
             <p className="subtitle">高效追蹤與管理您的程式能力檢定考古題</p>
           </div>
+        </div>
+
+        <div className="main-tabs">
+          <button 
+            className={`tab-btn ${activeTab === 'cpe' ? 'active' : ''}`}
+            onClick={() => setActiveTab('cpe')}
+          >
+            CPE 題目
+          </button>
+          <button 
+            className={`tab-btn ${activeTab === 'neetcode' ? 'active' : ''}`}
+            onClick={() => setActiveTab('neetcode')}
+          >
+            NeetCode 150
+          </button>
         </div>
 
         <div className="header-actions">
@@ -215,12 +232,16 @@ export default function App() {
               </svg>
             )}
           </button>
-          <button className="btn-secondary btn-reset" onClick={handleReset}>
-            重置進度
-          </button>
+          {activeTab === 'cpe' && (
+            <button className="btn-secondary btn-reset" onClick={handleReset}>
+              重置進度
+            </button>
+          )}
         </div>
       </header>
 
+      {activeTab === 'cpe' ? (
+        <>
       {/* Stats Dashboard Grid */}
       <section className="stats-grid">
         <div className="stats-card progress-card">
@@ -554,6 +575,10 @@ export default function App() {
             </div>
           </div>
         </div>
+      )}
+        </>
+      ) : (
+        <NeetCodeDashboard theme={theme} />
       )}
 
       <footer className="app-footer">
