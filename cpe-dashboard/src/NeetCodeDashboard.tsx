@@ -45,6 +45,17 @@ export default function NeetCodeDashboard({ theme }: { theme: 'dark' | 'light' }
     "Greedy", "Intervals", "Math & Geometry", "Bit Manipulation"
   ];
 
+  // Collapse state for categories (default to collapsed)
+  const [collapsedCats, setCollapsedCats] = useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = {};
+    categoriesOrder.forEach(cat => initial[cat] = true);
+    return initial;
+  });
+
+  const toggleCategory = (cat: string) => {
+    setCollapsedCats(prev => ({ ...prev, [cat]: !prev[cat] }));
+  };
+
   const groupedProblems = useMemo(() => {
     const groups: Record<string, NeetCodeProblem[]> = {};
     categoriesOrder.forEach(cat => groups[cat] = []);
@@ -128,66 +139,77 @@ export default function NeetCodeDashboard({ theme }: { theme: 'dark' | 'light' }
           
           return (
             <div key={category} className="category-section">
-              <h3 className="category-header">
-                {category} <span className="category-count">({catSolved} / {catProblems.length})</span>
-              </h3>
-              <div className="table-responsive">
-                <table className="problems-table neetcode-table">
-                  <thead>
-                    <tr>
-                      <th style={{ width: '60px' }}>ID</th>
-                      <th style={{ width: '40%' }}>題目名稱</th>
-                      <th style={{ width: '120px' }}>難度</th>
-                      <th>LeetCode 連結</th>
-                      <th style={{ width: '150px' }}>進度狀態</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {catProblems.map(p => {
-                      const status = solveStates[p.id] || 'todo';
-                      let diffClass = '';
-                      if (p.difficulty === 'Easy') diffClass = 'diff-easy';
-                      if (p.difficulty === 'Medium') diffClass = 'diff-medium';
-                      if (p.difficulty === 'Hard') diffClass = 'diff-hard';
-
-                      return (
-                        <tr key={p.id} className={`status-row-${status}`}>
-                          <td className="col-id">{p.id}</td>
-                          <td className="col-title">
-                            <div className="title-text">{p.title}</div>
-                          </td>
-                          <td>
-                            <span className={`difficulty-badge ${diffClass}`}>
-                              {p.difficulty}
-                            </span>
-                          </td>
-                          <td className="col-links">
-                            <a 
-                              href={p.leetcode_url} 
-                              target="_blank" 
-                              rel="noreferrer" 
-                              className="link-btn platform-leetcode"
-                            >
-                              LeetCode
-                            </a>
-                          </td>
-                          <td>
-                            <select 
-                              value={status}
-                              onChange={(e) => handleStatusChange(p.id, e.target.value as SolveStatus)}
-                              className={`select-status status-${status}`}
-                            >
-                              <option value="todo">未開始</option>
-                              <option value="in-progress">學習中</option>
-                              <option value="solved">已解決</option>
-                            </select>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+              <div className="category-header collapse-header" onClick={() => toggleCategory(category)}>
+                <div className="category-title-group">
+                  <svg 
+                    className={`collapse-icon ${collapsedCats[category] ? 'collapsed' : ''}`}
+                    viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                  >
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                  <h3>{category}</h3>
+                </div>
+                <span className="category-count">({catSolved} / {catProblems.length})</span>
               </div>
+              {!collapsedCats[category] && (
+                <div className="table-responsive">
+                  <table className="problems-table neetcode-table">
+                    <thead>
+                      <tr>
+                        <th style={{ width: '60px' }}>ID</th>
+                        <th style={{ width: '40%' }}>題目名稱</th>
+                        <th style={{ width: '120px' }}>難度</th>
+                        <th>LeetCode 連結</th>
+                        <th style={{ width: '150px' }}>進度狀態</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {catProblems.map(p => {
+                        const status = solveStates[p.id] || 'todo';
+                        let diffClass = '';
+                        if (p.difficulty === 'Easy') diffClass = 'diff-easy';
+                        if (p.difficulty === 'Medium') diffClass = 'diff-medium';
+                        if (p.difficulty === 'Hard') diffClass = 'diff-hard';
+
+                        return (
+                          <tr key={p.id} className={`status-row-${status}`}>
+                            <td className="col-id">{p.id}</td>
+                            <td className="col-title">
+                              <div className="title-text">{p.title}</div>
+                            </td>
+                            <td>
+                              <span className={`difficulty-badge ${diffClass}`}>
+                                {p.difficulty}
+                              </span>
+                            </td>
+                            <td className="col-links">
+                              <a 
+                                href={p.leetcode_url} 
+                                target="_blank" 
+                                rel="noreferrer" 
+                                className="link-btn platform-leetcode"
+                              >
+                                LeetCode
+                              </a>
+                            </td>
+                            <td>
+                              <select 
+                                value={status}
+                                onChange={(e) => handleStatusChange(p.id, e.target.value as SolveStatus)}
+                                className={`select-status status-${status}`}
+                              >
+                                <option value="todo">未開始</option>
+                                <option value="in-progress">學習中</option>
+                                <option value="solved">已解決</option>
+                              </select>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           );
         })}
