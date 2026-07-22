@@ -14,5 +14,6 @@
   },
   "[python]": {
     "editor.defaultFormatter": null
-  }
+  },
+  "better-comments.multilineComments": true
 }
